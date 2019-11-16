@@ -5,36 +5,49 @@ class CoursesOffered:
     # use the schedule (fall, summer, spring, odd, even) that was uploaded in Piazza.
 
     def __init__(self):
-        self.schedule = self.getSchedule(self)
+        self.schedule = self.getSchedule()
 
     def getSummerOdd(self):
-        # return a list of summer odd classes
+        # TODO: return a list of summer odd classes
+        print('some printing to avoid broken files')
+        return list()
 
     def getFallOdd(self):
-        # return a list of fall odd classes
+        # TODO: return a list of fall odd classes
+        print('some printing to avoid broken files')
+        return list()
 
     def getSpringEven(self):
-        # return a list of spring even classes
+        # TODO: return a list of spring even classes
+        print('some printing to avoid broken files')
+        return list()
 
     def getSummerEven(self):
-        # return a list of summer even classes
+        # TODO: return a list of summer even classes
+        print('some printing to avoid broken files')
+        return list()
 
     def getFallEven(self):
-        # return a list of fall even classes
+        # TODO: return a list of fall even classes
+        print('some printing to avoid broken files')
+        return list()
 
     def getSpringOdd(self):
-        # return a list of spring odd classes
+        # TODO: return a list of spring odd classes
+        print('some printing to avoid broken files')
+        return list()
 
     def getSchedule(self):
-        # return a dictionary structured like below...
+        # TODO: return a dictionary structured like below...
         #    dict = { "fall_odd": [list of the classes],
         #             "spring_even": [list of the classes],
         #             "summer_even": [list of the classes],... etc..
-
+        print('some printing to avoid broken files')
+        return dict()
 
     def getDomainForVariables(self, csp_object):
         print("here")
-        # Return a dictionary with the variables and their appropriate domain using the schedule and user input!
+        # TODO: Return a dictionary with the variables and their appropriate domain using the schedule and user input!
         # A CSP object will need to call this method to set it's domains according to the schedule.
         # set all variables domain's according to the schedule.
         # The schedule has courses for FALL EVEN YEAR, SPRING ODD YEAR, SUMMER ODD YEAR, FALL ODD YEAR, SPRING EVEN YEAR, and SUMMER EVEN YEAR
@@ -57,3 +70,4 @@ class CoursesOffered:
                 "S4C3": ["CS490"]
                 }
         '''
+        return list()
