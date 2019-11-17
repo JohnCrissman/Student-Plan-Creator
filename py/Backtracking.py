@@ -1,19 +1,73 @@
+from py.CSP import CSP
+
+
 class Backtracking:
 
     # instantiate
     def __init__(self, assignment, num_constraints_for_each):
-        self.variables = self.getVariables()
-        self.domain = self.getDomains()
+        self.csp = CSP()
+        self.variables = self.csp.getVariables()
+        self.domain = self.csp.getDomains()
         self.assignment = assignment
         self.num_constraints_for_each = num_constraints_for_each
 
-    # def Backtrack(self, assignment_input):
-    #     if self.isAssigComplete(assignment_input):
-    #         return assignment_input
-    #     self.selectUnassignedVariable(assignment_input)
-    #
-    # def selectUnassignedVariable(self, assignment_input):
-    #     vars_after_mrv = self.MRV(assignment_input)
+    def backtracking_algorithm(self):
+        # starts with nothing assigned
+        return self.backtrack({}, self.csp)
+
+    def backtrack(self, assignment_so_far, csp):
+        # returns None if failure
+        if csp.isAssigComplete(assignment_so_far):
+            return assignment_so_far
+
+        candidate = self.select_unassigned_variable(assignment_so_far, csp)
+        print("candidate: ", candidate)
+
+        for val in self.order_domain_variables(candidate, assignment_so_far, csp):
+            print("checking if candidate with selected value are consistent:", candidate,val)
+            if csp.isAssigConsistent(val, assignment_so_far):
+                # the assignment is consistent
+                print("the assignment is consistent")
+                assignment_so_far[candidate] = [val]
+                result = self.backtrack(assignment_so_far, csp)
+                if result is not None:
+                    print("Assignment so far:", result)
+                    return result
+            print("assignment_so_far: ", assignment_so_far, "the assignment is not consistent or returned Failure")
+            # the assignment is not consistent or returned Failure
+            # here I undo all changes I made assuming the val was going to work
+            # I mean specially in the domain, if any were made
+            assignment_so_far.pop("key", None)
+            # remove val from assignment and inferences from the the csp
+
+        return None
+
+
+    def order_domain_variables(self,candidate, assignment, csp):
+        print(candidate, assignment, csp)
+        # TODO: the LCV will be implemented here
+        # TODO: sort by least affecting neighbors and natural order
+        # I might need a method call, affected_neighbors(assignment) that
+        # returns a dictionary with the values as keys and number of affected neighbors as value
+        return []
+
+    def select_unassigned_variable(self, assignment_so_far, csp_so_far):
+        # vars_after_mrv = self.MRV(assignment_so_far, csp_so_far)
+        # TODO: order the variables by MRV first, then degree, then alphabetical order
+        # TODO: return the first variable of this ordered process
+        return "var"
+
+    def apply_mrv(self):
+        # TODO: ordered variables by minimum legal moves
+        # if needed call apply_degree with only the variables that had the same value from the mrv
+        return ["", "", ""]
+
+    def apply_degree(self):
+        # TODO: ordered variables by minimum legal moves
+        return ["", "", ""]
+
+
+
 
 
     def sort_by_values_len(dict):
@@ -64,169 +118,43 @@ class Backtracking:
                 "C3": [7, 8, 9]
                 }
 
-    def isAssigConsistent(self, assignment_input):
-        assignment = assignment_input
-        return ((assignment["A1"] != assignment["A2"] or assignment["A1"] == None or assignment["A2"] == None)
-            and (assignment["A1"] != assignment["A3"] or assignment["A1"] == None or assignment["A3"] == None)
-            and (assignment["A2"] != assignment["A3"] or assignment["A2"] == None or assignment["A3"] == None)
-            and (assignment["B1"] != assignment["B2"] or assignment["B1"] == None or assignment["B2"] == None)
-            and (assignment["B1"] != assignment["B3"] or assignment["B1"] == None or assignment["B3"] == None)
-            and (assignment["B2"] != assignment["B3"] or assignment["B2"] == None or assignment["B3"] == None)
-            and (assignment["C1"] != assignment["C2"] or assignment["C1"] == None or assignment["C2"] == None)
-            and (assignment["C1"] != assignment["C3"] or assignment["C1"] == None or assignment["C3"] == None)
-            and (assignment["C2"] != assignment["C3"] or assignment["C2"] == None or assignment["C3"] == None)
-            and (assignment["A1"] != assignment["B1"] or assignment["A1"] == None or assignment["B1"] == None)
-            and (assignment["A1"] != assignment["C1"] or assignment["A1"] == None or assignment["C1"] == None)
-            and (assignment["B1"] != assignment["C1"] or assignment["B1"] == None or assignment["C1"] == None)
-            and (assignment["A2"] != assignment["B2"] or assignment["A2"] == None or assignment["B2"] == None)
-            and (assignment["A2"] != assignment["C2"] or assignment["A2"] == None or assignment["C2"] == None)
-            and (assignment["B2"] != assignment["C2"] or assignment["B2"] == None or assignment["C2"] == None)
-            and (assignment["A3"] != assignment["B3"] or assignment["A3"] == None or assignment["B3"] == None)
-            and (assignment["A3"] != assignment["C3"] or assignment["A3"] == None or assignment["C3"] == None)
-            and (assignment["B3"] != assignment["C3"] or assignment["B3"] == None or assignment["C3"] == None)
-                 )
+    # def isAssigConsistent(self, assignment_input):
+    #     assignment = assignment_input
+    #     return ((assignment["A1"] != assignment["A2"] or assignment["A1"] == None or assignment["A2"] == None)
+    #         and (assignment["A1"] != assignment["A3"] or assignment["A1"] == None or assignment["A3"] == None)
+    #         and (assignment["A2"] != assignment["A3"] or assignment["A2"] == None or assignment["A3"] == None)
+    #         and (assignment["B1"] != assignment["B2"] or assignment["B1"] == None or assignment["B2"] == None)
+    #         and (assignment["B1"] != assignment["B3"] or assignment["B1"] == None or assignment["B3"] == None)
+    #         and (assignment["B2"] != assignment["B3"] or assignment["B2"] == None or assignment["B3"] == None)
+    #         and (assignment["C1"] != assignment["C2"] or assignment["C1"] == None or assignment["C2"] == None)
+    #         and (assignment["C1"] != assignment["C3"] or assignment["C1"] == None or assignment["C3"] == None)
+    #         and (assignment["C2"] != assignment["C3"] or assignment["C2"] == None or assignment["C3"] == None)
+    #         and (assignment["A1"] != assignment["B1"] or assignment["A1"] == None or assignment["B1"] == None)
+    #         and (assignment["A1"] != assignment["C1"] or assignment["A1"] == None or assignment["C1"] == None)
+    #         and (assignment["B1"] != assignment["C1"] or assignment["B1"] == None or assignment["C1"] == None)
+    #         and (assignment["A2"] != assignment["B2"] or assignment["A2"] == None or assignment["B2"] == None)
+    #         and (assignment["A2"] != assignment["C2"] or assignment["A2"] == None or assignment["C2"] == None)
+    #         and (assignment["B2"] != assignment["C2"] or assignment["B2"] == None or assignment["C2"] == None)
+    #         and (assignment["A3"] != assignment["B3"] or assignment["A3"] == None or assignment["B3"] == None)
+    #         and (assignment["A3"] != assignment["C3"] or assignment["A3"] == None or assignment["C3"] == None)
+    #         and (assignment["B3"] != assignment["C3"] or assignment["B3"] == None or assignment["C3"] == None)
+    #              )
 
-    def isAssigComplete(self, assignment_input):
-        assignment = assignment_input
-        return (self.isAssigConsistent(assignment_input)
-                and assignment["A1"] != None
-                and assignment["A2"] != None
-                and assignment["A3"] != None
-                and assignment["B1"] != None
-                and assignment["B2"] != None
-                and assignment["B3"] != None
-                and assignment["C1"] != None
-                and assignment["C2"] != None
-                and assignment["C3"] != None
-                )
-
-
+    # def isAssigComplete(self, assignment_input):
+    #     assignment = assignment_input
+    #     return (self.isAssigConsistent(assignment_input)
+    #             and assignment["A1"] != None
+    #             and assignment["A2"] != None
+    #             and assignment["A3"] != None
+    #             and assignment["B1"] != None
+    #             and assignment["B2"] != None
+    #             and assignment["B3"] != None
+    #             and assignment["C1"] != None
+    #             and assignment["C2"] != None
+    #             and assignment["C3"] != None
+    #             )
 
 
 
- #########################################################################################
-## Demo / Test of Backtracking class
 
 
-assignment0 = {"A1": 7,
-              "A2": 8,
-              "A3": 9,
-              "B1": 8,
-              "B2": 7,
-              "B3": 9,
-              "C1": None,
-              "C2": None,
-              "C3": 7
-              }
-assignment1 = {"A1": 7,
-              "A2": 7,
-              "A3": 8,
-              "B1": 8,
-              "B2": 9,
-              "B3": 7,
-              "C1": None,
-              "C2": None,
-              "C3": 9
-              }
-assignment2 = {"A1": None,
-              "A2": None,
-              "A3": None,
-              "B1": 7,
-              "B2": 8,
-              "B3": 9,
-              "C1": 7,
-              "C2": None,
-              "C3": 8
-              }
-assignment3 = {"A1": 1,
-              "A2": 2,
-              "A3": 3,
-              "B1": None,
-              "B2": None,
-              "B3": 9,
-              "C1": 2,
-              "C2": 8,
-              "C3": 1
-              }
-assignment4 = {"A1": None,
-              "A2": None,
-              "A3": None,
-              "B1": None,
-              "B2": None,
-              "B3": None,
-              "C1": None,
-              "C2": None,
-              "C3": None
-              }
-num_constraints = {"A1": 4, "A2": 4, "A3": 4,
-                   "B1": 4, "B2": 4, "B3": 4,
-                   "C1": 4, "C2": 4, "C3": 4}
-
-
-
-csp0 = Backtracking(assignment0, num_constraints)
-csp1 = Backtracking(assignment1, num_constraints)
-csp2 = Backtracking(assignment2, num_constraints)
-csp3 = Backtracking(assignment3, num_constraints)
-csp4 = Backtracking(assignment4, num_constraints)
-
-print("testing whether assignments are consistent:")
-print(csp0.isAssigConsistent(assignment0)) ## true
-print(csp1.isAssigConsistent(assignment1)) ## false
-print(csp2.isAssigConsistent(assignment2)) ## false
-print(csp3.isAssigConsistent(assignment3)) ## true
-print(csp4.isAssigConsistent(assignment4)) ## true
-
-print("\ntesting whether assignments are complete and consistent!")
-print(csp0.isAssigComplete(assignment0)) ## false
-print(csp1.isAssigComplete(assignment1)) ## false
-print(csp2.isAssigComplete(assignment2)) ## false
-print(csp3.isAssigComplete(assignment3)) ## true
-print(csp4.isAssigComplete(assignment4)) ## false
-
-## let's work with assignment4 because there are no values assigned
-# print(csp4.Backtrack(assignment3))
-
-
-dict = {"A1": [7, 8, 9],
-                "A2": [7, 8, 9],
-                "A3": [7],
-                "B1": [7, 8],
-                "B2": [7, 8],
-                "B3": [7, 8, 9],
-                "C1": [7],
-                "C2": [7, 8, 9],
-                "C3": [7, 8, 9, 2, 1]
-                }
-
-dict= {'a': [9,2,3,4,5], 'b': [1,2,3,4, 5, 6], 'c': [], 'd': [1,2,3,4], 'e': [1,2]}
-dict_temp = {'a': 'hello', 'b': 'bye', 'c': '', 'd': 'aa', 'e': 'zz'}
-
-def sort_by_values_len(dict):
-    dict_len= {key: len(value) for key, value in dict.items()}
-    import operator
-    sorted_key_list = sorted(dict_len.items(), key=operator.itemgetter(1), reverse=False)
-    sorted_dict = [{item[0]: dict[item [0]]} for item in sorted_key_list]
-    return sorted_dict
-
-# print (sort_by_values_len(dict))
-# new_dict = sort_by_values_len(dict)
-# print(new_dict)
-
-print("testing")
-print(assignment3["A1"] != assignment3["A2"] != assignment3["A3"] != assignment3["B2"])
-print(len(assignment3))
-
-unique_values = list()
-duplicate_values = list()
-for value in assignment3.values():
-    if value not in unique_values or value is None:
-        unique_values.append(value)
-    else:
-        duplicate_values.append(value)
-
-print("Unique values: ", unique_values)
-print("Duplicate values: ", duplicate_values)
-#list_of_sorted_dict = sorted(dict, key = lambda key: len(dict[key]))
-
-#print(list_of_sorted_dict)
