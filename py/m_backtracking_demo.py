@@ -17,7 +17,6 @@ def generate_new_csp(keys):
     return legal_moves, num_constraints, affect_neighbors
 
 
-
 def main():
     bt = Backtracking()
 
