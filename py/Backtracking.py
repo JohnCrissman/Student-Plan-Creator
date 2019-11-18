@@ -1,15 +1,18 @@
-from py.CSP import CSP
+import heapq
+import math
+import pprint
+from py.m_CSP import CSP
 
 
 class Backtracking:
 
     # instantiate
-    def __init__(self, assignment, num_constraints_for_each):
-        self.csp = CSP()
-        self.variables = self.csp.getVariables()
-        self.domain = self.csp.getDomains()
-        self.assignment = assignment
-        self.num_constraints_for_each = num_constraints_for_each
+    def __init__(self):
+        self.csp = CSP([], {}, {})
+        self.assignment = {}
+        self.legal_moves = {}
+        self.num_constraints = {}
+        self.num_constraints_for_each = {}
 
     def backtracking_algorithm(self):
         # starts with nothing assigned
@@ -17,7 +20,7 @@ class Backtracking:
 
     def backtrack(self, assignment_so_far, csp):
         # returns None if failure
-        if csp.isAssigComplete(assignment_so_far):
+        if csp.is_assign_complete(assignment_so_far):
             return assignment_so_far
 
         candidate = self.select_unassigned_variable(assignment_so_far, csp)
@@ -52,109 +55,97 @@ class Backtracking:
         return []
 
     def select_unassigned_variable(self, assignment_so_far, csp_so_far):
-        # vars_after_mrv = self.MRV(assignment_so_far, csp_so_far)
-        # TODO: order the variables by MRV first, then degree, then alphabetical order
-        # TODO: return the first variable of this ordered process
-        return "var"
+        # TODO: use assignment_so_far, csp_so_far to get the legal moves and num constraints
+        constraints = csp_so_far.get_containts_updated_so_far(assignment_so_far)
+        var, dom = self.get_csp_updated_so_far(assignment_so_far)
+        legal_moves = self.get_legal_moves(dom)
+        return self.mrv_degree_alpha(legal_moves, constraints)
 
-    def apply_mrv(self):
-        # TODO: ordered variables by minimum legal moves
-        # if needed call apply_degree with only the variables that had the same value from the mrv
-        return ["", "", ""]
+    def get_legal_moves(self, dom):
+        return {key: len(value) for key, value in dom.items()}
 
-    def apply_degree(self):
-        # TODO: ordered variables by minimum legal moves
-        return ["", "", ""]
+    def get_variables_updated_so_far(self, assignment):
+        """return new variables given the assignment"""
+        new_variables = self.crete_copy_of_variables()
+        for k, v in assignment.items():
+            print("k,v: (", k, ",", v, ")\t ")
+            new_variables.remove(k)
 
+        return new_variables
 
+    def crete_copy_of_variables(self):
+        """returns a copy of the list"""
+        return self.csp.variables[:]
 
+    def crete_copy_of_domain(self):
+        """returns a copy of the dictionary"""
+        return dict.copy(self.csp.domain)
 
+    def get_csp_updated_so_far(self, assignment):
+        """
+        Given the assignment, returns the variables and domain of variables
+        that still need to be assigned the Domain is also updated with the constraint
+        that a value cannot be assigned more than once
+        """
+        print("\tAssignment:\t", assignment)
+        new_variables = self.crete_copy_of_variables()
+        new_domains = self.crete_copy_of_domain()
+        print("\tVariables:\t", new_variables, "\n\tDomains\t", new_domains)
+        for variable, value in assignment.items():
+            # print("k,v: (", k, ",", v, ")\t ")
+            # remove the variables that are already assigned from the new variable set
+            new_variables.remove(variable)
+            # remove the variables that are already assigned
+            new_domains.pop(variable)
+            # remove the value from all domains
+            self.eliminate_assigned_values_from_each_domain(new_domains, value)
 
-    def sort_by_values_len(dict):
-        dict_len = {key: len(value) for key, value in dict.items()}
-        import operator
-        sorted_key_list = sorted(dict_len.items(), key=operator.itemgetter(1), reverse=False)
-        sorted_dict = [{item[0]: dict[item[0]]} for item in sorted_key_list]
-        len_smallest = 99999
-        for i in sorted_dict:
-            if len(sorted_dict[i]) < len_smallest:
-                len_smallest = len(sorted_dict[i])
+        print("\n\told Variables:\t", self.csp.variables, "\n\told Domains\t", self.csp.domain)
+        print("\n\tnew Variables:\t", new_variables, "\n\tnew Domains\t", new_domains)
+        return new_variables, new_domains
 
-        for j in sorted_dict:
-            if len_smallest < len(sorted_dict[j]):
-                del sorted_dict[j]
+    def eliminate_assigned_values_from_each_domain(self, all_domains, value_assigned):
+        # removes the value assigned from all domains
+        # maybe a form of forward checking: all variables must have different assigned values
+        for variable, domain in all_domains.items():
+            # make sure to eliminate the selected value from the other options
+            try:
+                domain.remove(value_assigned)
+            except ValueError:
+                continue
 
-        return sorted_dict
+    def mrv_degree_alpha(self, dic_legal_moves, dic_num_constraints):
+        # dic_legal_moves refers to the dictionary with variable as key and # legal moves as value
+        # dict_num_constraints
+        legal_moves = [(v, (-1) * dic_num_constraints[k], k) for k, v in dic_legal_moves.items()]
+        # print("Legal moves:  ", legal_moves)
+        heapq.heapify(legal_moves)
+        # print("Heap Legal moves: ", legal_moves)
+        degree_moves = []
+        more = True
+        count = 0
+        prev = math.inf
+        while legal_moves and more:
+            popped = heapq.heappop(legal_moves)
+            var_nro_moves = popped[0]
+            var_num_const = popped[1]
+            var_name = popped[2]
+            # print(popped, "\t", var_name, ": \t Nro: moves: ", var_nro_moves, "\t Nro Constraints: ", (-1) * var_num_const)
+            if count is 0:
+                heapq.heappush(degree_moves, popped)
+            else:
+                if prev == var_nro_moves:
+                    heapq.heappush(degree_moves, popped)
+                else:
+                    heapq.heappush(legal_moves, popped)
+                    more = False
 
-    def getNumConstraints(self):
-        return self.num_constraints_for_each
-
-
-    # def MRV(self, assignment_input):
-    #     possible_variables = sort_by_values_len(assignment_input)
-
-
-    def degree(self):
-        return 2
-
-    def LCV(self):
-        return 3
-
-    def getAssignment(self):
-        return self.assignment
-
-    def getVariables(self):
-        return ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
-
-    def getDomains(self):
-        return {"A1": [7, 8, 9],
-                "A2": [7, 8, 9],
-                "A3": [7, 8, 9],
-                "B1": [7, 8, 9],
-                "B2": [7, 8, 9],
-                "B3": [7, 8, 9],
-                "C1": [7, 8, 9],
-                "C2": [7, 8, 9],
-                "C3": [7, 8, 9]
-                }
-
-    # def isAssigConsistent(self, assignment_input):
-    #     assignment = assignment_input
-    #     return ((assignment["A1"] != assignment["A2"] or assignment["A1"] == None or assignment["A2"] == None)
-    #         and (assignment["A1"] != assignment["A3"] or assignment["A1"] == None or assignment["A3"] == None)
-    #         and (assignment["A2"] != assignment["A3"] or assignment["A2"] == None or assignment["A3"] == None)
-    #         and (assignment["B1"] != assignment["B2"] or assignment["B1"] == None or assignment["B2"] == None)
-    #         and (assignment["B1"] != assignment["B3"] or assignment["B1"] == None or assignment["B3"] == None)
-    #         and (assignment["B2"] != assignment["B3"] or assignment["B2"] == None or assignment["B3"] == None)
-    #         and (assignment["C1"] != assignment["C2"] or assignment["C1"] == None or assignment["C2"] == None)
-    #         and (assignment["C1"] != assignment["C3"] or assignment["C1"] == None or assignment["C3"] == None)
-    #         and (assignment["C2"] != assignment["C3"] or assignment["C2"] == None or assignment["C3"] == None)
-    #         and (assignment["A1"] != assignment["B1"] or assignment["A1"] == None or assignment["B1"] == None)
-    #         and (assignment["A1"] != assignment["C1"] or assignment["A1"] == None or assignment["C1"] == None)
-    #         and (assignment["B1"] != assignment["C1"] or assignment["B1"] == None or assignment["C1"] == None)
-    #         and (assignment["A2"] != assignment["B2"] or assignment["A2"] == None or assignment["B2"] == None)
-    #         and (assignment["A2"] != assignment["C2"] or assignment["A2"] == None or assignment["C2"] == None)
-    #         and (assignment["B2"] != assignment["C2"] or assignment["B2"] == None or assignment["C2"] == None)
-    #         and (assignment["A3"] != assignment["B3"] or assignment["A3"] == None or assignment["B3"] == None)
-    #         and (assignment["A3"] != assignment["C3"] or assignment["A3"] == None or assignment["C3"] == None)
-    #         and (assignment["B3"] != assignment["C3"] or assignment["B3"] == None or assignment["C3"] == None)
-    #              )
-
-    # def isAssigComplete(self, assignment_input):
-    #     assignment = assignment_input
-    #     return (self.isAssigConsistent(assignment_input)
-    #             and assignment["A1"] != None
-    #             and assignment["A2"] != None
-    #             and assignment["A3"] != None
-    #             and assignment["B1"] != None
-    #             and assignment["B2"] != None
-    #             and assignment["B3"] != None
-    #             and assignment["C1"] != None
-    #             and assignment["C2"] != None
-    #             and assignment["C3"] != None
-    #             )
-
-
-
-
+            prev = var_nro_moves
+            count = count + 1
+        # print("Legal Moves: ", legal_moves)
+        # print("Choices for MRV: ", degree_moves)
+        popped = heapq.heappop(degree_moves)
+        # print("after selection: ", degree_moves)
+        # print("\nSelected variable: ", popped, "\t-->", popped[2])
+        return popped[2]
 

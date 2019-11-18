@@ -1,4 +1,5 @@
 from random import randrange
+from py.Backtracking import Backtracking
 
 
 def dict_with_random_values(keys):
@@ -16,24 +17,32 @@ def generate_new_csp(keys):
     return legal_moves, num_constraints, affect_neighbors
 
 
-def main():
-    # TODO: generate a dictionary with random values
-    keys = ["mari", "valor", "thing", "word", "maps"]
 
-    # for the MRV and degree
-    legal_moves = {'mari': 2, 'valor': 3, 'thing': 5, 'word': 0, 'maps': 8}
-    num_constraints = {'mari': 6, 'valor': 2, 'thing': 0, 'word': 7, 'maps': 3}
+def main():
+    bt = Backtracking()
+
+    dom = {"mari": ["CS400"],
+           "valor": ["CS404"],
+           "thing": ["CS331", "CS345", "CS355", "CS442", "CS460"],
+           "word": ["CS401", "CS411", "CS412", "CS413"],
+           "maps": ["CS335", "CS415", "CS416", "CS419"]
+           }
+    keys = ["mari", "valor", "thing", "word", "maps"]
+    num_constraints = {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
+
+    # dic_legal_moves = {'mari': 2, 'valor': 2, 'thing': 2, 'word': 2, 'maps': 8}
+    dic_legal_moves = {key: len(value) for key, value in dom.items()}
+    print(dic_legal_moves)
+    selected_variable = bt.mrv_degree_alpha(dic_legal_moves, num_constraints)
+    print(selected_variable)
+
+    # Given the assignment
+    print("\n======================================================\n")
+    assign = {"mari": "CS355", "valor": "CS401"}
+    new_var, new_dom = bt.get_csp_updated_so_far(assign)
 
     # for the LCV
-    affect_neighbors = {'mari': 2, 'valor': 9, 'thing': 3, 'word': 1, 'maps': 3}
-
-
-
-
-
-
-
-
+    affect_neighbors = {'mari': 2, 'valor': 9, 'thing': 3, 'word': 2, 'maps': 3}
 
 
 if __name__ == '__main__':
