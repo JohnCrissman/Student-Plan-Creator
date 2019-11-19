@@ -1,15 +1,15 @@
 
 
 class CSP:
-    def __init__(self, variables, domains, constraints):
+    def __init__(self):
         self.variables = ["mari", "valor", "thing", "word", "maps"]
-        self.domain = {"mari": ["CS400"],
-                       "valor": ["CS404"],
-                       "thing": ["CS331", "CS345", "CS355", "CS442", "CS460"],
+        self.domain = {"mari": ["CS400", "CS404"],
+                       "valor": ["CS404", "CS411", "CS345"],
+                       "thing": ["CS331", "CS411", "CS345", "CS355", "CS442", "CS460"],
                        "word": ["CS401", "CS411", "CS412", "CS413"],
-                       "maps": ["CS335", "CS415", "CS416", "CS419"]
+                       "maps": ["CS335", "CS415", "CS416", "CS419", "CS400"]
                        }
-        self.constraints = self.get_containts_updated_so_far(constraints)
+        self.constraints = self.get_containts_updated_so_far({})
         self.num_constraints = {'mari': 7, 'valor': 12, 'thing': 14, 'word': 7, 'maps': 3}
 
     # def get_variables_updated_so_far(self, assignment):
