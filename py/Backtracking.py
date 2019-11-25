@@ -26,9 +26,9 @@ class Backtracking:
         candidate = self.select_unassigned_variable(assignment_so_far, csp)
         print("candidate: ", candidate)
 
-        for val in self.order_domain_variables(candidate, assignment_so_far, csp):
+        for val in self.order_domain_variables(candidate, assignment_so_far, csp.domain):
             print("checking if candidate with selected value are consistent:\t", candidate, " : ", val)
-            if csp.isAssigConsistent(val, assignment_so_far):
+            if csp.is_assign_consistent(candidate, val, assignment_so_far):
                 # the assignment is consistent
                 print("the assignment is consistent")
                 assignment_so_far[candidate] = [val]
@@ -40,7 +40,7 @@ class Backtracking:
             # the assignment is not consistent or returned Failure
             # here I undo all changes I made assuming the val was going to work
             # I mean specially in the domain, if any were made
-            assignment_so_far.pop("key", None)
+            assignment_so_far.pop(candidate, val)
             # remove val from assignment and inferences from the the csp
 
         return None

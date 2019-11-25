@@ -32,10 +32,17 @@ class CSP:
 
     def get_containts_updated_so_far(self, constraints):
         # TODO: load the contraints given the asignment
-        return {}
+        return {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
 
-    def is_assign_consistent(self, assignment_input):
-        assignment = assignment_input
+
+    def is_assign_consistent(self, candidate, val, assignment_input):
+        """ returns true if the same course is not taken more than once"""
+        assignment1 = dict.copy(assignment_input)
+        assignment1[candidate] = val
+
+        return self.check_consistency(assignment1)
+
+    def check_consistency(self, assignment):
         unique_values = list()
         for value in assignment.values():
             if value not in unique_values or value is None:
@@ -44,13 +51,16 @@ class CSP:
         return len(assignment) == len(unique_values)
 
     def is_assign_complete(self, assignment_input):
-        return (self.is_assign_consistent(assignment_input)
+        return (self.check_consistency(assignment_input)
                 and len(assignment_input) == len(self.variables)
                 )
 
+
+
+
 # ########################################################################################
 # # Demo / Test of Backtracking class
-
+'''
 
 assignment0 = {}
 assignment1 = {"S1C1": "CS400",
@@ -103,7 +113,6 @@ num_constraints = {"S1C1": [7, 8, 9],
 # print(csp3.isAssigConsistent(assignment0)) #True
 # print(csp3.isAssigConsistent(assignment1)) #True
 # print(csp3.isAssigConsistent(assignment3)) #True
-#
-# print("Completeness")
-# print(csp3.isAssigComplete(assignment3)) #True
-# print(csp3.isAssigComplete(assignment1)) #False
+
+
+'''
