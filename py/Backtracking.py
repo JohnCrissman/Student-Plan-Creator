@@ -36,11 +36,12 @@ class Backtracking:
                 if result is not None:
                     print("Assignment so far:", result)
                     return result
+                assignment_so_far.pop(candidate, val)
             print("assignment_so_far: ", assignment_so_far, "the assignment is not consistent or returned Failure")
             # the assignment is not consistent or returned Failure
             # here I undo all changes I made assuming the val was going to work
             # I mean specially in the domain, if any were made
-            assignment_so_far.pop(candidate, val)
+
             # remove val from assignment and inferences from the the csp
 
         return None
