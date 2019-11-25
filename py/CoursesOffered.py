@@ -1,43 +1,60 @@
+from py.Student import Student
+
+
 class CoursesOffered:
     # let's assume the student will start in the Fall or the Spring.  They will not START in the Summer.
     # instantiate
 
     # use the schedule (fall, summer, spring, odd, even) that was uploaded in Piazza.
 
-    def __init__(self):
-        self.schedule = self.getSchedule()
+    def __init__(self, filename):
+        self.filename = filename
+        self.schedule = self.get_schedule(self.student.semester, self.student.year)
+        self.student = Student(self.filename)
 
-    def getSummerOdd(self):
+
+    def get_schedule(self, semester, year):
+        list_of_semesters = ["FALL_EVEN", "SPRING_ODD", "SUMMER_ODD",
+                             "FALL_ODD", "SPRING_EVEN", "SUMMER_EVEN"]
+        int_year = int(year)
+        if (int_year % 2 == 0):
+            semester_year = "EVEN"
+        else:
+            semester_year = "ODD"
+
+        starting_semester = semester + "_" + semester_year
+        print(starting_semester)
+        return starting_semester
+
+    def get_summer_odd(self):
         # TODO: return a list of summer odd classes
-        print('some printing to avoid broken files')
-        return list()
+        return ["CS331", "CS412", "CS420", "CS440", "CS490"]
 
-    def getFallOdd(self):
+    def get_fall_odd(self):
         # TODO: return a list of fall odd classes
-        print('some printing to avoid broken files')
-        return list()
+        return ["CS325", "CS331", "CS335", "CS345", "CS400", "CS401", "CS404", "CS413",
+                "CS415", "CS419", "CS460", "CS490"]
 
-    def getSpringEven(self):
+    def get_spring_even(self):
         # TODO: return a list of spring even classes
-        print('some printing to avoid broken files')
-        return list()
+        return ["CS327", "CS331", "CS335", "CS355", "CS400", "CS404", "CS408", "CS411",
+                "CS412", "CS417", "CS420", "CS442", "CS490"]
 
-    def getSummerEven(self):
+    def get_summer_even(self):
         # TODO: return a list of summer even classes
-        print('some printing to avoid broken files')
-        return list()
+        return ["CS331", "CS401", "CS413", "CS415", "CS419", "CS490"]
 
-    def getFallEven(self):
+    def get_fall_even(self):
         # TODO: return a list of fall even classes
-        print('some printing to avoid broken files')
-        return list()
+        return ["CS325", "CS331", "CS335", "CS345", "CS400", "CS404", "CS412",
+                "CS416", "CS420", "CS440", "CS460", "MATH305", "ECON401", "CS490"]
 
-    def getSpringOdd(self):
+    def get_spring_odd(self):
         # TODO: return a list of spring odd classes
-        print('some printing to avoid broken files')
-        return list()
+        return ["CS327", "CS331", "CS335", "CS355", "CS400", "CS401", "CS404",
+                "CS413", "CS415", "CS417", "CS419", "CS442", "CS490"]
 
-    def getSchedule(self):
+    def get_schedule(self):
         # TODO: return a dictionary structured like below...
         #    dict = { "fall_odd": [list of the classes],
         #             "spring_even": [list of the classes],
@@ -45,7 +62,16 @@ class CoursesOffered:
         print('some printing to avoid broken files')
         return dict()
 
-    def getDomainForVariables(self, csp_object):
+    def get_category_1(self):
+        return ["CS331", "CS345", "CS355", "CS442", "CS460"]
+
+    def get_category_2(self):
+        return ["CS401", "CS411", "CS412", "CS413"]
+
+    def get_category_3(self):
+        return ["CS335", "CS415", "CS416", "CS419"]
+
+    def get_domain_for_variables(self, csp_object):
         print("here")
         # TODO: Return a dictionary with the variables and their appropriate domain using the schedule and user input!
         # A CSP object will need to call this method to set it's domains according to the schedule.
