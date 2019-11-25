@@ -1,5 +1,6 @@
 from random import randrange
 from py.Backtracking import Backtracking
+from py.m_CSP import CSP
 
 
 def dict_with_random_values(keys):
@@ -17,32 +18,35 @@ def generate_new_csp(keys):
     return legal_moves, num_constraints, affect_neighbors
 
 
-
 def main():
     bt = Backtracking()
+    csp = CSP()
 
-    dom = {"mari": ["CS400"],
-           "valor": ["CS404"],
-           "thing": ["CS331", "CS345", "CS355", "CS442", "CS460"],
-           "word": ["CS401", "CS411", "CS412", "CS413"],
-           "maps": ["CS335", "CS415", "CS416", "CS419"]
-           }
-    keys = ["mari", "valor", "thing", "word", "maps"]
-    num_constraints = {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
-
+    # dom = {"mari": ["CS400"],
+    #        # "valor": ["CS404"],
+    #        # "thing": ["CS331", "CS345", "CS355", "CS442", "CS460"],
+    #        "word": ["CS401", "CS411", "CS412", "CS413"],
+    #        "maps": ["CS335", "CS415", "CS416", "CS419", "CS400"]
+    #        }
+    # keys = ["mari", "valor", "thing", "word", "maps"]
     # dic_legal_moves = {'mari': 2, 'valor': 2, 'thing': 2, 'word': 2, 'maps': 8}
-    dic_legal_moves = {key: len(value) for key, value in dom.items()}
+
+    print("\n====================================================== MRV Degree Alpha\n")
+    num_constraints = {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
+    dic_legal_moves = {key: len(value) for key, value in csp.domain.items()}
     print(dic_legal_moves)
     selected_variable = bt.mrv_degree_alpha(dic_legal_moves, num_constraints)
     print(selected_variable)
 
     # Given the assignment
-    print("\n======================================================\n")
-    assign = {"mari": "CS355", "valor": "CS401"}
+    print("\n====================================================== UPDATE CSP\n")
+    assign = {"thing": "CS355", "valor": "CS401"}
     new_var, new_dom = bt.get_csp_updated_so_far(assign)
 
     # for the LCV
-    affect_neighbors = {'mari': 2, 'valor': 9, 'thing': 3, 'word': 2, 'maps': 3}
+    print("\n====================================================== LCV\n")
+    bt.order_domain_variables(selected_variable, assign, new_dom)
+
 
 
 if __name__ == '__main__':
