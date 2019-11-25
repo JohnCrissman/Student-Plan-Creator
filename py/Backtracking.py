@@ -26,7 +26,7 @@ class Backtracking:
         candidate = self.select_unassigned_variable(assignment_so_far, csp)
         print("candidate: ", candidate)
 
-        for val in self.order_domain_variables(candidate, assignment_so_far, csp.domain):
+        for val in self.order_domain_variables(candidate, assignment_so_far, csp):
             print("checking if candidate with selected value are consistent:\t", candidate, " : ", val)
             if csp.is_assign_consistent(candidate, val, assignment_so_far):
                 # the assignment is consistent
@@ -46,25 +46,25 @@ class Backtracking:
 
         return None
 
-
     def select_unassigned_variable(self, assignment_so_far, csp_so_far):
         # TODO: still needs CSP get_constraints_updated_so_far(assignment_so_far)
-        constraints = csp_so_far.get_containts_updated_so_far(assignment_so_far)
+        constraints = csp_so_far.get_constaints_updated_so_far(assignment_so_far)
         var, dom = self.get_csp_updated_so_far(assignment_so_far)
         legal_moves = self.__get_legal_moves(dom)
         return self.mrv_degree_alpha(legal_moves, constraints)
 
-    def order_domain_variables(self, candidate_name, assignment, domains):
+    def order_domain_variables(self, candidate_name, assignment, csp):
         """
         returns an ordered list with the values to be evaluated based on the least constraining value
-        :param candidate_name:
-        :param assignment:
-        :param domains:
-        :return:
+        :param candidate_name: variable to be assigned a value
+        :param assignment: a dictionary with whats already assigned (key-value pair)
+        :param csp: csp object containing the original csp
+        :return: a list with the values to be evaluated ordered by the LCV -> alphabetically
         """
         print("\tcandidate:\t", candidate_name)
         print("\tassignment\t", assignment)
-        print("\tdomains:\t", domains)
+        print("\tdomains:\t", csp.domains)
+        domains = dict.copy(csp.domains)
 
         # create affecting neighbors dictionary
         affect_neighbors = {}
@@ -140,7 +140,7 @@ class Backtracking:
         """
         private method
         returns a copy of the dictionary"""
-        return dict.copy(self.csp.domain)
+        return dict.copy(self.csp.domains)
 
     def get_csp_updated_so_far(self, assignment):
         """
@@ -165,7 +165,7 @@ class Backtracking:
             # remove the value from all domains
             self.__eliminate_assigned_values_from_each_domain(new_domains, value)
 
-        print("\n\t\t--initial Variables:\t", self.csp.variables, "\n\t\t--initial Domains\t", self.csp.domain)
+        print("\n\t\t--initial Variables:\t", self.csp.variables, "\n\t\t--initial Domains\t", self.csp.domains)
         print("\n\t\t--new Variables:\t", new_variables, "\n\t\t--new Domains\t", new_domains)
         return new_variables, new_domains
 

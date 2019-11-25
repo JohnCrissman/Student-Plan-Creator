@@ -33,7 +33,7 @@ def main():
 
     print("\n====================================================== MRV Degree Alpha\n")
     num_constraints = {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
-    dic_legal_moves = {key: len(value) for key, value in csp.domain.items()}
+    dic_legal_moves = {key: len(value) for key, value in csp.domains.items()}
     print(dic_legal_moves)
     selected_variable = bt.mrv_degree_alpha(dic_legal_moves, num_constraints)
     print(selected_variable)
@@ -45,8 +45,10 @@ def main():
 
     # for the LCV
     print("\n====================================================== LCV\n")
-    bt.order_domain_variables(selected_variable, assign, new_dom)
+    bt.order_domain_variables(selected_variable, assign, CSP())
 
+    # print("\n====================================================== BACKTRACKING\n")
+    print(bt.backtracking_algorithm())
 
 
 if __name__ == '__main__':
