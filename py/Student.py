@@ -1,38 +1,28 @@
 
-
 class Student:
 
-    def __init__(self, semester, year, solution, filename, list_of_classes):
-        self.semester = semester
-        self.year = year
-        self.solution = solution
-        self.filename = filename
-        self.list_of_classes = list_of_classes
+    # TODO: read the text file
 
-    @staticmethod
-    def load(self, filename):
-        print("This load file to student object")
+    def __init__(self, filename):
+        self.filename = filename  # n_info.txt
+        self.semester = ""
+        self.year = ""
+        self.number_of_classes = ""
+        self.list_of_classes = []
+        self.load()
 
-    def get_semester(self):
-        return self.semester
+    def load(self):
+        with open('../resources/' + self.filename) as file:
+            content = file.readlines()
+            content = [x.rstrip() for x in content]
+            self.semester = content.pop(0)
+            self.year = content.pop(0)
+            self.number_of_classes = content.pop(0)
+            self.list_of_classes = content
 
-    def set_semester(self):
-        return self.semester
-
-    def get_year(self):
-        return self.year
-
-    def set_year(self):
-        return self.year
-
-    def get_filename(self):
-        return self.filename
-
-    def set_filename(self):
-        return self.filename
-
-    def get_list_of_classes(self):
-        return self.list_of_classes
-
-    def set_list_of_classes(self):
-        return self.list_of_classes
+        #print(content)
+        print(self.semester)
+        print(self.year)
+        print(self.number_of_classes)
+        #print(len(self.list_of_classes))
+        print(self.list_of_classes)
