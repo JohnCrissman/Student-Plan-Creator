@@ -1,11 +1,11 @@
 from py.CoursesOffered import CoursesOffered
 
 class CSP:
-    def __init__(self):
+    def __init__(self, courses_offered):
         self.variables = self.get_variables()
         self.domains = self.getDomains()
         self.num_constraints = self.get_constraints_updated_so_far({})
-        self.courses_offered = CoursesOffered()
+        self.courses_offered = courses_offered
 
     def get_variables(self):
         return ["S1C1", "S1C2", "S1C3", "S2C1", "S2C2", "S2C3",
