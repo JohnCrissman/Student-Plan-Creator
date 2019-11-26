@@ -17,14 +17,12 @@ def main():
     student = Student(filename)
     courses_offered = CoursesOffered(student)
     print(courses_offered.get_semesters())
-
-
+    courses_offered.get_domain_for_variables()
 
     csp = CSP(courses_offered)
-
-
+    print("here are the domains")
+    print(csp.domains)
 
 
 if __name__ == '__main__':
     main()
-

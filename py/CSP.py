@@ -3,28 +3,16 @@ from py.CoursesOffered import CoursesOffered
 class CSP:
     def __init__(self, courses_offered):
         self.variables = self.get_variables()
-        self.domains = self.getDomains()
         self.num_constraints = self.get_constraints_updated_so_far({})
         self.courses_offered = courses_offered
+        self.domains = self.get_domains()
 
     def get_variables(self):
         return ["S1C1", "S1C2", "S1C3", "S2C1", "S2C2", "S2C3",
                 "S3C1", "S3C2", "S3C3", "S4C1", "S4C2", "S4C3"]
 
-    def getDomains(self):
-        return {"S1C1": ["CS400"],
-                "S1C2": ["CS404"],
-                "S1C3": ["CS331", "CS345", "CS355", "CS442", "CS460"],
-                "S2C1": ["CS401", "CS411", "CS412", "CS413"],
-                "S2C2": ["CS335", "CS415", "CS416", "CS419"],
-                "S2C3": ["CS33333"],
-                "S3C1": ["CS44444"],
-                "S3C2": ["CS55555"],
-                "S3C3": ["CS66666"],
-                "S4C1": ["CS77777"],
-                "S4C2": ["CS420"],
-                "S4C3": ["CS490"]
-                }
+    def get_domains(self):
+        return self.courses_offered.get_domain_for_variables()
 
     def get_constraints_updated_so_far(self, constraints):
         # TODO: load the contraints given the asignment
