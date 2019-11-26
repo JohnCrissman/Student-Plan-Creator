@@ -6,23 +6,17 @@ from py.CoursesOffered import CoursesOffered
 
 
 def main():
-    # write your code here
-    # test your stuff here
-    print("Hi john!")
-    # John test
-    j = Backtracking()
     print("\n====================================================== John Test\n")
     filename = "j_info.txt"
 
     student = Student(filename)
     courses_offered = CoursesOffered(student)
-    print(courses_offered.get_semesters())
-    courses_offered.get_domain_for_variables()
-
     csp = CSP(courses_offered)
+
     print("here are the domains")
     print(csp.domains)
-
+    bt = Backtracking(csp)
+    bt.backtracking_algorithm()
 
 if __name__ == '__main__':
     main()

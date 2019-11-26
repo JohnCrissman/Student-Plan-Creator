@@ -3,7 +3,8 @@ from py.CoursesOffered import CoursesOffered
 class CSP:
     def __init__(self, courses_offered):
         self.variables = self.get_variables()
-        self.num_constraints = self.get_constraints_updated_so_far({})
+        self.constraints = self.get_constraints_updated_so_far({})
+        self.num_constraints = self.constraints
         self.courses_offered = courses_offered
         self.domains = self.get_domains()
 
@@ -12,7 +13,9 @@ class CSP:
                 "S3C1", "S3C2", "S3C3", "S4C1", "S4C2", "S4C3"]
 
     def get_domains(self):
-        return self.courses_offered.get_domain_for_variables()
+        my_domains = self.courses_offered.get_domain_for_variables()
+        print("\nDomains: \n", my_domains)
+        return my_domains
 
     def get_constraints_updated_so_far(self, constraints):
         # TODO: load the contraints given the asignment
