@@ -31,23 +31,23 @@ def main():
     # keys = ["mari", "valor", "thing", "word", "maps"]
     # dic_legal_moves = {'mari': 2, 'valor': 2, 'thing': 2, 'word': 2, 'maps': 8}
 
-    print("\n====================================================== MRV Degree Alpha\n")
-    num_constraints = {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
-    dic_legal_moves = {key: len(value) for key, value in csp.domains.items()}
-    print(dic_legal_moves)
-    selected_variable = bt.mrv_degree_alpha(dic_legal_moves, num_constraints)
-    print(selected_variable)
+    # print("\n====================================================== MRV Degree Alpha\n")
+    # num_constraints = {'mari': 14, 'valor': 1, 'thing': 14, 'word': 7, 'maps': 3}
+    # dic_legal_moves = {key: len(value) for key, value in csp.domains.items()}
+    # print(dic_legal_moves)
+    # selected_variable = bt.mrv_degree_alpha(dic_legal_moves, num_constraints)
+    # print(selected_variable)
 
     # Given the assignment
-    print("\n====================================================== UPDATE CSP\n")
-    assign = {"thing": "CS355", "valor": "CS401"}
-    new_var, new_dom = bt.get_csp_updated_so_far(assign)
+    # print("\n====================================================== UPDATE CSP\n")
+    # assign = {"thing": "CS355", "valor": "CS401"}
+    # new_var, new_dom = bt.get_csp_updated_so_far(assign)
 
     # for the LCV
-    print("\n====================================================== LCV\n")
-    bt.order_domain_variables(selected_variable, assign, CSP())
+    # print("\n====================================================== LCV\n")
+    # bt.order_domain_variables(selected_variable, assign, csp)
 
-    # print("\n====================================================== BACKTRACKING\n")
+    print("\n====================================================== BACKTRACKING\n")
     print(bt.backtracking_algorithm())
 
 
