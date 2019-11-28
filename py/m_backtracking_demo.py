@@ -1,7 +1,9 @@
 from random import randrange
 from py.Backtracking import Backtracking
-from py.m_CSP import CSP
-
+# from py.m_CSP import CSP
+from py.CSP import CSP
+from py.CoursesOffered import CoursesOffered
+from py.Student import Student
 
 def dict_with_random_values(keys):
     my_dictionary = dict()
@@ -19,8 +21,11 @@ def generate_new_csp(keys):
 
 
 def main():
-    bt = Backtracking()
-    csp = CSP()
+    filename = "j_info.txt"
+    st = Student(filename)
+    co = CoursesOffered(st)
+    csp = CSP(co)
+    bt = Backtracking(csp)
 
     # dom = {"mari": ["CS400"],
     #        # "valor": ["CS404"],
@@ -48,142 +53,16 @@ def main():
     # bt.order_domain_variables(selected_variable, assign, csp)
 
     print("\n====================================================== BACKTRACKING\n")
-    print(bt.backtracking_algorithm())
+    solution = bt.backtracking_algorithm_first_n_solution(3)
+    print(solution)
+    if solution is not None:
+        print(solution)
+        print(len(solution))
+        solution
+        for k, v in sorted(solution.items()):
+            print(k, v)
+    print("\n\nAll solutions are: ", len(bt.all_solutions))
 
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-
-
-
-
-
-# assignment0 = {"A1": 7,
-#               "A2": 8,
-#               "A3": 9,
-#               "B1": 8,
-#               "B2": 7,
-#               "B3": 9,
-#               "C1": None,
-#               "C2": None,
-#               "C3": 7
-#               }
-# assignment1 = {"A1": 7,
-#               "A2": 7,
-#               "A3": 8,
-#               "B1": 8,
-#               "B2": 9,
-#               "B3": 7,
-#               "C1": None,
-#               "C2": None,
-#               "C3": 9
-#               }
-# assignment2 = {"A1": None,
-#               "A2": None,
-#               "A3": None,
-#               "B1": 7,
-#               "B2": 8,
-#               "B3": 9,
-#               "C1": 7,
-#               "C2": None,
-#               "C3": 8
-#               }
-# assignment3 = {"A1": 1,
-#               "A2": 2,
-#               "A3": 3,
-#               "B1": None,
-#               "B2": None,
-#               "B3": 9,
-#               "C1": 2,
-#               "C2": 8,
-#               "C3": 1
-#               }
-# assignment4 = {"A1": None,
-#               "A2": None,
-#               "A3": None,
-#               "B1": None,
-#               "B2": None,
-#               "B3": None,
-#               "C1": None,
-#               "C2": None,
-#               "C3": None
-#               }
-# num_constraints = {"A1": 4, "A2": 4, "A3": 4,
-#                    "B1": 4, "B2": 4, "B3": 4,
-#                    "C1": 4, "C2": 4, "C3": 4}
-
-
-
-# csp0 = Backtracking(assignment0, num_constraints)
-# csp1 = Backtracking(assignment1, num_constraints)
-# csp2 = Backtracking(assignment2, num_constraints)
-# csp3 = Backtracking(assignment3, num_constraints)
-# csp4 = Backtracking(assignment4, num_constraints)
-
-# print("testing whether assignments are consistent:")
-# print(csp0.isAssigConsistent(assignment0)) ## true
-# print(csp1.isAssigConsistent(assignment1)) ## false
-# print(csp2.isAssigConsistent(assignment2)) ## false
-# print(csp3.isAssigConsistent(assignment3)) ## true
-# print(csp4.isAssigConsistent(assignment4)) ## true
-#
-# print("\ntesting whether assignments are complete and consistent!")
-# print(csp0.isAssigComplete(assignment0)) ## false
-# print(csp1.isAssigComplete(assignment1)) ## false
-# print(csp2.isAssigComplete(assignment2)) ## false
-# print(csp3.isAssigComplete(assignment3)) ## true
-# print(csp4.isAssigComplete(assignment4)) ## false
-
-## let's work with assignment4 because there are no values assigned
-# print(csp4.Backtrack(assignment3))
-
-
-# dict = {"A1": [7, 8, 9],
-#                 "A2": [7, 8, 9],
-#                 "A3": [7],
-#                 "B1": [7, 8],
-#                 "B2": [7, 8],
-#                 "B3": [7, 8, 9],
-#                 "C1": [7],
-#                 "C2": [7, 8, 9],
-#                 "C3": [7, 8, 9, 2, 1]
-#                 }
-
-# dict= {'a': [9,2,3,4,5], 'b': [1,2,3,4, 5, 6], 'c': [], 'd': [1,2,3,4], 'e': [1,2]}
-# dict_temp = {'a': 'hello', 'b': 'bye', 'c': '', 'd': 'aa', 'e': 'zz'}
-
-
-# def sort_by_values_len(dict):
-#     dict_len = {key: len(value) for key, val in dict.items()}
-#     import operator
-#     sorted_key_list = sorted(dict_len.items(), key=operator.itemgetter(1), reverse=False)
-#     sorted_dict = [{item[0]: dict[item [0]]} for item in sorted_key_list]
-#     return sorted_dict
-
-
-# print (sort_by_values_len(dict))
-# new_dict = sort_by_values_len(dict)
-# print(new_dict)
-# print("testing")
-# print(assignment3["A1"] != assignment3["A2"] != assignment3["A3"] != assignment3["B2"])
-# print(len(assignment3))
-#
-# unique_values = list()
-# duplicate_values = list()
-# for value in assignment3.values():
-#     if value not in unique_values or value is None:
-#         unique_values.append(value)
-#     else:
-#         duplicate_values.append(value)
-#
-# print("Unique values: ", unique_values)
-# print("Duplicate values: ", duplicate_values)
-#list_of_sorted_dict = sorted(dict, key = lambda key: len(dict[key]))
-
-#print(list_of_sorted_dict)

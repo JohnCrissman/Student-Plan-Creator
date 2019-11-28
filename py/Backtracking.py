@@ -1,7 +1,6 @@
 import heapq
 import math
 import pprint
-from py.m_CSP import CSP
 
 
 class Backtracking:
@@ -13,44 +12,70 @@ class Backtracking:
         # self.legal_moves = {}
         self.num_constraints = {}
         self.num_constraints_for_each = {}
+        self.all_solutions = []
+        self.find_all = False
+        self.__max_number_of_solutions = 1
+
+    def backtracking_algorithm_one_solution(self):
+        self.backtracking_algorithm_first_n_solution(1)
+
+    def backtracking_algorithm_first_n_solution(self, n):
+        self.__max_number_of_solutions = n
+        self.backtracking_algorithm()
+
+    def backtracking_algorithm_all_solutions(self):
+        self.find_all = True
+        self.backtracking_algorithm()
 
     def backtracking_algorithm(self):
         # starts with nothing assigned
         self.assignment = self.backtrack(self.assignment, self.csp)
         return self.assignment
 
-    def backtrack(self, assignment_so_far, csp):
+    def backtrack(self, assignment, csp):
+        l = [(k, len(v)) for k, v in self.csp.domains.items()]
+        print("\n\n+++++ Domains so far: ", l, "\n\n")
+        assignment_so_far = dict.copy(assignment)
         # returns None if failure
         if csp.is_assign_complete(assignment_so_far):
-            return assignment_so_far
+            if self.find_all or len(self.all_solutions) < self.__max_number_of_solutions:
+                self.all_solutions.append(dict.copy(assignment_so_far))
+                return None
+            else:
+                return assignment_so_far
 
+        print("BT* MRV (Start) =========")
         candidate = self.select_unassigned_variable(assignment_so_far, csp)
-        print("candidate: ", candidate)
+        print("BT* MRV (End) ========= --> candidate: ", candidate, "\n")
 
         for val in self.order_domain_variables(candidate, assignment_so_far, csp):
-            print("checking if candidate with selected value are consistent:\t", candidate, " : ", val)
+            print("BT* LVC ========= checking if {", candidate, " : ", val, "} is consistent ?")
             if csp.is_assign_consistent(candidate, val, assignment_so_far):
                 # the assignment is consistent
-                print("the assignment is consistent")
+                print("\t\tBT* YES!")
+                # we add the candidate and value to our assignment
                 assignment_so_far[candidate] = val
+                print("+++++++++++ ",  [(k, len(v)) for k,v in self.csp.domains.items()])
                 result = self.backtrack(assignment_so_far, csp)
                 if result is not None:
-                    print("Assignment so far:", result)
+                    print("\nBT* Assignment so far:", result, "\n")
                     return result
+                # returned None
+                # here I undo all changes I made assuming the val was going to work
+                # I mean specially in the domain, if any were made
+                # remove val from assignment and inferences from the the csp
                 assignment_so_far.pop(candidate)
-            print("The assignment so far: ", assignment_so_far, "the assignment is not consistent or returned Failure\n\n")
-            # the assignment is not consistent or returned Failure
-            # here I undo all changes I made assuming the val was going to work
-            # I mean specially in the domain, if any were made
-
-            # remove val from assignment and inferences from the the csp
+            else:
+                print("\t\tBT* NO!")
+            print("BT* The assignment so far: ", assignment_so_far, "the assignment is not consistent or returned Failure\n\n")
+            # the assignment is not consistent
 
         return None
 
     def select_unassigned_variable(self, assignment_so_far, csp_so_far):
-        # TODO: still needs CSP get_constraints_updated_so_far(assignment_so_far)
         constraints = csp_so_far.get_constraints_updated_so_far(assignment_so_far)
-        var, dom = self.get_csp_updated_so_far(assignment_so_far)
+        # deletes the the already assigned variables and values from the csp
+        dom = self.get_csp_updated_so_far(assignment_so_far)
         legal_moves = self.__get_legal_moves(dom)
         return self.mrv_degree_alpha(legal_moves, constraints)
 
@@ -63,28 +88,42 @@ class Backtracking:
         :return: a list with the values to be evaluated ordered by the LCV -> alphabetically
         """
         domains = dict.copy(csp.domains)
-        print("\tassignment\t", assignment)
-        print("\tdomains:\t", domains)
-        print("\tcandidate:\t", candidate_name)
+        print("\t|- Order the values for LCV:")
+        print("\t\tassignment\t", assignment, "\n\t\tdomains:\t", domains, "\n\t\tcandidate:\t", candidate_name)
 
         # remove variables that have been assigned already from the domains
-        self.__eliminate_variables_from_all_domains(domains, assignment)
+        # self.__eliminate_variables_from_all_domains(domains, assignment)
 
         # create affecting neighbors dictionary
+
+        affected = self.number_of_affected_neighbors(assignment, candidate_name, domains)
+
+        heapq.heapify(affected)
+        # print("\t|- affected:\t", affected)
+
+        final_ordered_list = [heapq.heappop(affected)[1] for i in range(len(affected))]
+        print("\t|- final LCV ordered list: \t", final_ordered_list)
+
+        return final_ordered_list
+
+    def number_of_affected_neighbors(self, assignment, candidate_name, dom):
+        candidate_values = dom.pop(candidate_name)
         affect_neighbors = {}
         affected = []
-        candidate_values = domains.pop(candidate_name)
+        # print("\t\tChoosing a value for: ", candidate_name)
         for possible_value in candidate_values:
-            print("\t\tLCV value: ", possible_value)
-            # get the new legal moves assuming new assignment has candidate_name: possible value
+            # hipotetically we think that possible value will be assigned to candiadte_name
+            # print("\t\t\tIF =>  ", candidate_name, " :", possible_value)
             temp_assignment = dict.copy(assignment)
             temp_assignment[candidate_name] = possible_value
+            # print("\t\t\tIF =>  ", temp_assignment)
 
-            print("\t\ttemporary assignment\t", temp_assignment, "\tfor ", candidate_name, ":", possible_value)
+            # get the new domain if candidate_name and possible_value are added to the assignment
+            temp_dom = self.get_csp_updated_so_far(temp_assignment)
 
-            temp_var, temp_dom = self.get_csp_updated_so_far(temp_assignment)
-            legal_moves_per_name = {name: len(values) for name, values in temp_dom.items()}
-            print("\t\tlegal_moves_per_name\t", legal_moves_per_name)
+            # get the new legal moves assuming new assignment has added candidate_name: possible value
+            legal_moves_per_name = self.__get_legal_moves(temp_dom)
+            # print("\t\t\tIF => legal_moves_per_name\t", legal_moves_per_name)
 
             # TODO: filter neighbors of candidate given the constraints
             # constaint_graph = []
@@ -95,17 +134,10 @@ class Backtracking:
             # for now I assume that everyone is a neighbor of everyone
             sum_up = self.sum_up_neighbors_with_possible_values(legal_moves_per_name)
             affect_neighbors[possible_value] = sum_up
-            tup = ((-1)*sum_up, possible_value)
+            tup = ((-1) * sum_up, possible_value)
             affected.append(tup)
-
-        print("\taffect_neighbors:\t", affect_neighbors)
-        heapq.heapify(affected)
-        print("\taffected:\t", affected)
-
-        final_ordered_list = [heapq.heappop(affected)[1] for i in range(len(affected))]
-        print("\tfinal ordered list: \t", final_ordered_list)
-
-        return final_ordered_list
+        print("\t\taffect_neighbors:\t", affect_neighbors)
+        return affected
 
     def sum_up_neighbors_with_possible_values(self, legal_moves_per_name):
         """
@@ -114,25 +146,10 @@ class Backtracking:
         :param legal_moves_per_name: a dictionary with neighbor as key and length of the updated domain as value
         :return: sum of all the number of moves of its neighbors given the potential value chosen
         """
-        # total = 0
-        # for k, v in legal_moves_per_name.items():
-        #     print("k ", k, "\tv ",v)
-        #     total = total + v
-        # print("total: ", total, "\tsum(): ", sum(legal_moves_per_name.values()))
-
         return sum(legal_moves_per_name.values())
 
     def __get_legal_moves(self, dom):
         return {key: len(value) for key, value in dom.items()}
-
-    # def get_variables_updated_so_far(self, assignment):
-    #     """return new variables given the assignment"""
-    #     new_variables = self.__crete_copy_of_variables()
-    #     for k, v in assignment.items():
-    #         print("k,v: (", k, ",", v, ")\t ")
-    #         new_variables.remove(k)
-    #
-    #     return new_variables
 
     def __crete_copy_of_variables(self):
         """
@@ -144,7 +161,10 @@ class Backtracking:
         """
         private method
         returns a copy of the dictionary with all initial domains"""
-        return dict.copy(self.csp.domains)
+        d = {}
+        for k, v in self.csp.domains.items():
+            d[k] = [course for course in v]
+        return d
 
     def get_csp_updated_so_far(self, assignment):
         """
@@ -155,50 +175,26 @@ class Backtracking:
         :param assignment:
         :return: a list of two objects [0] the new variables [1] the new domains given the assignment
         """
+        print("\t\t ============ UPDATE CSP - START\n")
         print("\t\t--Assignment:\t", assignment)
-        new_variables = self.__crete_copy_of_variables()
         new_domains = self.__crete_copy_of_domain()
-        print("\t\t--initial Variables:\t", new_variables)
-        print("\t\t--initial Domains\t", new_domains)
+        # new_variables = [k for k in new_domains.keys()]  # self.__crete_copy_of_variables()
+        # print("\t\t--(copy) ini Variables:\t", new_domains.keys())
+        # print("\t\t--(copy) ini Domains\t", new_domains)
+
+        self.remove_variables_values_that_are_already_assigned(assignment, new_domains)
+
+        # print("\n\t\t--new Variables:\t", new_domains.keys(), "\n\t\t--new Domains\t", new_domains)
+        print("\t\t ============ UPDATE CSP - END\n")
+        return new_domains
+
+    def remove_variables_values_that_are_already_assigned(self, assignment, new_domains):
         for variable, value in assignment.items():
-            # print("k,v: (", k, ",", v, ")\t ")
+            # print("variable,value: (", variable, ",", value, ")\t ")
             # remove the variables that are already assigned from the new variable set
-            new_variables.remove(variable)
-            # remove the variables that are already assigned
             new_domains.pop(variable)
-            # remove the value from all domains
+            # remove the value that are already selected from all available domains
             self.__eliminate_value_from_domains(new_domains, value)
-
-        print("\n\t\t--new Variables:\t", new_variables, "\n\t\t--new Domains\t", new_domains)
-        return new_variables, new_domains
-
-    def __eliminate_variables_from_all_domains(self, all_domains, assignment):
-        """
-        private method
-        Removes candidate_name from all domains
-        :param all_domains:
-        :param assignment: contains a dictionary with the variables that need to be removed
-        :return: no return
-        """
-        for selected_variable, domain in assignment.items():
-            # make sure to eliminate the selected value from the other options
-            try:
-                if selected_variable in all_domains:
-                    all_domains.pop(selected_variable)
-            except ValueError:
-                continue
-
-    def __eliminate_candidate_variable_from_all_domains(self, all_domains, candidate):
-        """
-        private method
-        Removes candidate_name from all domains
-        :param all_domains:
-        :param candidate: contains the variable that need to be removed
-        :return: no return
-        """
-        # make sure to eliminate the selected variable from the domains
-        if candidate in all_domains:
-            all_domains.pop(candidate)
 
     def __eliminate_value_from_domains(self, all_domains, value_to_be_removed):
         """
@@ -209,12 +205,16 @@ class Backtracking:
         :param value_to_be_removed:
         :return: no return
         """
+        # print("******========= BEFORE eliminate value (", value_to_be_removed, ")\nBefore:", [(k,len(v)) for k,v in all_domains.items()])
         for variable, domain in all_domains.items():
             # make sure to eliminate the selected value from the other options
             try:
+                # print("trying... ", variable, "from: ", domain)
                 domain.remove(value_to_be_removed)
             except ValueError:
                 continue
+        # print("After:", [(k, len(v)) for k, v in all_domains.items()], "\n******========= AFTER")
+
 
     def mrv_degree_alpha(self, dic_legal_moves, dic_num_constraints):
         """
