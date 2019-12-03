@@ -73,7 +73,9 @@ class CoursesOffered:
         list_cat_3 = self.get_category_3()
 
         self.compare_domain_to_categories(courses_to_domains, list_cat_1, list_cat_2, list_cat_3, our_semesters)
-
+        print("Here is our CSP ------------------------------------------------------------------------")
+        print(courses_to_domains)
+        print("That was our CSP -----------------------------------------------------------------------")
         return courses_to_domains
 
     def compare_domain_to_categories(self, courses_to_domains, list_cat_1, list_cat_2, list_cat_3, our_semesters):
