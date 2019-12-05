@@ -1,6 +1,7 @@
 # do your imports here
 from py.CSP import CSP
 from py.Backtracking import Backtracking
+from py.Display import Display
 from py.Student import Student
 from py.CoursesOffered import CoursesOffered
 
@@ -31,6 +32,9 @@ def main():
     print("\n\nAll solutions are: ", len(bt.all_solutions))
 
     print(bt.all_solutions)
+
+    display = Display(solution, "my_solution")
+
 
 
 
