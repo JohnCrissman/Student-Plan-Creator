@@ -1,11 +1,10 @@
 import heapq
 import math
-import pprint
 
 
 class Backtracking:
 
-    # instantiate
+    # constructor
     def __init__(self, csp):
         self.csp = csp
         self.assignment = {}
@@ -58,7 +57,7 @@ class Backtracking:
                 print("+++++++++++ ",  [(k, len(v)) for k,v in self.csp.domains.items()])
                 result = self.backtrack(assignment_so_far, csp)
                 if result is not None:
-                    print("\nBT* Assignment so far:", result, "\n")
+                    # print("\nBT* Assignment so far:", result, "\n")
                     return result
                 # returned None
                 # here I undo all changes I made assuming the val was going to work
