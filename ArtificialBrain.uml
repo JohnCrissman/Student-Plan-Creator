@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#/Users/marianela/Dropbox/NEIU/cs335/FinalProject/Student-Plan-Creator/py/Backtracking.py</OriginalElement>
+  <nodes>
+    <node x="0.0" y="585.0">py.Backtracking.Backtracking</node>
+    <node x="575.0000000000001" y="673.0">py.CoursesOffered.CoursesOffered</node>
+    <node x="1281.0" y="772.0">py.Student.Student</node>
+    <node x="1471.0" y="717.0">py.CSP.CSP</node>
+    <node x="1006.5" y="0.0">object</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="py.CSP.CSP" target="object">
+      <point x="0.0" y="-157.5" />
+      <point x="1673.5" y="555.0" />
+      <point x="1243.625" y="555.0" />
+      <point x="101.625" y="267.5" />
+    </edge>
+    <edge source="py.CoursesOffered.CoursesOffered" target="object">
+      <point x="-1.1368683772161603E-13" y="-201.5" />
+      <point x="918.0" y="565.0" />
+      <point x="1108.125" y="565.0" />
+      <point x="-33.875" y="267.5" />
+    </edge>
+    <edge source="py.Student.Student" target="object">
+      <point x="0.0" y="-102.5" />
+      <point x="1366.0" y="565.0" />
+      <point x="1175.875" y="565.0" />
+      <point x="33.875" y="267.5" />
+    </edge>
+    <edge source="py.Backtracking.Backtracking" target="object">
+      <point x="0.0" y="-289.5" />
+      <point x="277.5" y="555.0" />
+      <point x="1040.375" y="555.0" />
+      <point x="-101.625" y="267.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.41520270270270276" x="938.0" y="581.9999999999999" />
+  <SelectedNodes>
+    <node>object</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Methods</Category>
+    <Category>Inner Classes</Category>
+    <Category>Fields</Category>
+  </Categories>
+</Diagram>
+

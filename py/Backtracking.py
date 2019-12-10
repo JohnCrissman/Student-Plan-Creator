@@ -54,7 +54,7 @@ class Backtracking:
                 print("\t\tBT* YES!")
                 # we add the candidate and value to our assignment
                 assignment_so_far[candidate] = val
-                print("+++++++++++ ",  [(k, len(v)) for k,v in self.csp.domains.items()])
+                print("+++++++++++ ",  [(k, len(v)) for k, v in self.csp.domains.items()])
                 result = self.backtrack(assignment_so_far, csp)
                 if result is not None:
                     # print("\nBT* Assignment so far:", result, "\n")

@@ -10,7 +10,7 @@ class TestCSP(unittest.TestCase):
         assignment = {'S1C1': 'CS400', 'S1C2': 'CS404', 'S2C3': 'CS335', 'S4C2': 'CS420', 'S4C3': 'CS490', 'S2C2': 'CS411', 'S2C1': 'CS331'}
         candidate = "S3C2"
         val = "419"
-        filename = "j_info.txt"
+        filename = "fall_2021.txt"
         student = Student(filename)
         courses_offered = CoursesOffered(student)
         csp = CSP(courses_offered)
