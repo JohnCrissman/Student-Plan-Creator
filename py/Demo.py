@@ -37,6 +37,9 @@ def main():
         print('********************************************')
         if size > 0:
             solutions = [all_solutions[0], all_solutions[int(size / 2)], all_solutions[size - 1]]
+            # print(solutions[0])
+            # print(solutions[1])
+            # print(solutions[2])
             d = Display(solutions, student)
         else:
             print('Ohh! :( \nThere is no solution for the specified file.')

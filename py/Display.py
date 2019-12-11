@@ -30,7 +30,7 @@ class Display:
         print("{:<22} {:<10}".format('Semesters', 'Classes'))
         print(dash)
 
-        for keys, values in solution.items():
+        for keys, values in sorted(solution.items()):
             temp_list.append(values)
 
         if semester == val1:
@@ -70,7 +70,7 @@ class Display:
         self.writer.writerow([dash])
         self.writer.writerow(["{:<20} {:<5}".format('Semesters', 'Classes')])
         self.writer.writerow([dash])
-        for keys, values in solution.items():
+        for keys, values in sorted(solution.items()):
             temp_list.append(values)
 
         if semester == val1:
