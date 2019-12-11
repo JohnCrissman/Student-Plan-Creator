@@ -1,8 +1,34 @@
 from py.Backtracking import Backtracking
 from py.CSP import CSP
 from py.Student import Student
-from py.CoursesOffered import CoursesOffered
 from py.Display import Display
+
+
+class Demo:
+    def __init__(self, filename):
+        self.student = Student(filename)
+        self.csp = CSP(self.student)
+        self.solutions = []
+        self.__compute_student_plans()
+        self.__show_results()
+
+    def __compute_student_plans(self):
+        bt = Backtracking(self.csp)
+        bt.backtracking_algorithm_all_solutions()
+        print('-- end of execution and debugging messages... \n\n\n\n\n')
+        self.solutions = bt.all_solutions
+
+    def __show_results(self):
+        print('******************************************************\n')
+        print('-----------------       RESULTS      -----------------\n')
+        print('******************************************************\n')
+        size = len(self.solutions)
+        if size > 0:
+            print('\nWe calculated ', size, ' solutions.  You will be shown\nthree of them.\n')
+            solutions = [self.solutions[0], self.solutions[int(size / 2)], self.solutions[size - 1]]
+            d = Display(solutions, self.student)
+        else:
+            print('Ohh! :( \nThere is no solution for the specified file.')
 
 
 def handle_file_not_found(file):
@@ -18,34 +44,15 @@ def handle_file_not_found(file):
     print('|\t2020')
     print('|\t0')
 
+
 def main():
-    #    this main should use the classs created to generate the student's plan
-    file = input('Please enter the name of the file to read: ')
+
+    filename = input('Please enter the name of the file to read: ')
+
     try:
-        student = Student(file)
-        # load the courses offered starting on the semester the student desires to start
-        courses_offered = CoursesOffered(student)
-        # create the CSP with the courses offered
-        csp = CSP(courses_offered)
-
-        # create a backtracking object
-        bt = Backtracking(csp)
-        bt.backtracking_algorithm_all_solutions()
-        all_solutions = bt.all_solutions
-        size = len(all_solutions)
-        # solutions = []
-        print('********************************************')
-        if size > 0:
-            solutions = [all_solutions[0], all_solutions[int(size / 2)], all_solutions[size - 1]]
-            # print(solutions[0])
-            # print(solutions[1])
-            # print(solutions[2])
-            d = Display(solutions, student)
-        else:
-            print('Ohh! :( \nThere is no solution for the specified file.')
-
+        demo = Demo(filename)
     except FileNotFoundError:
-        handle_file_not_found(file)
+        handle_file_not_found(filename)
 
     print("\n\n\t-- Thank you for using our app.")
     print("\t-- Artificial Brain! :)")

@@ -14,11 +14,11 @@ class Display:
             self.writer = csv.writer(writer)
             for sol in self.solutions:
                 self.generate_output_csv(sol)
-                self.generate_output(sol)
-            print('Your solutions are stored in the resource folder under the following name: ')
-            print('sol_'+student.filename.replace('.txt', '.csv'))
+                self.generate_output_console(sol)
+            print('Your solutions are stored in the resource folder under the')
+            print('following name: sol_'+student.filename.replace('.txt', '.csv'))
 
-    def generate_output(self, solution):
+    def generate_output_console(self, solution):
         temp_list = []
         dash = '-' * 55
         val1 = ','.join(self.list_of_semesters[:1])

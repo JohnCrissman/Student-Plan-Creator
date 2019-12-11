@@ -1,11 +1,11 @@
 from py.CoursesOffered import CoursesOffered
 
+
 class CSP:
-    def __init__(self, courses_offered):
+    def __init__(self, student):
         self.variables = self.get_variables()
-        self.constraints = self.get_constraints_updated_so_far({})
-        self.num_constraints = self.constraints
-        self.courses_offered = courses_offered
+        self.num_constraints = self.get_constraints_updated_so_far({})
+        self.courses_offered = CoursesOffered(student)
         self.domains = self.get_domains()
 
     def get_variables(self):
@@ -17,7 +17,7 @@ class CSP:
         print("\nDomains: \n", my_domains)
         return my_domains
 
-    def get_constraints_updated_so_far(self, constraints):
+    def get_constraints_updated_so_far(self, current_assignment):
         # TODO: load the contraints given the asignment
         return {"S1C1": 1,
                 "S1C2": 1,
@@ -38,9 +38,9 @@ class CSP:
         assignment1 = dict.copy(assignment_input)
         assignment1[candidate] = val
 
-        return self.check_consistency(assignment1)
+        return self.__check_consistency(assignment1)
 
-    def check_consistency(self, assignment):
+    def __check_consistency(self, assignment):
         unique_values = list()
         for value in assignment.values():
             if value not in unique_values or value is None:
@@ -49,7 +49,7 @@ class CSP:
         return len(assignment) == len(unique_values)
 
     def is_assign_complete(self, assignment_input):
-        return (self.check_consistency(assignment_input)
+        return (self.__check_consistency(assignment_input)
                 and len(assignment_input) == len(self.variables)
                 )
 

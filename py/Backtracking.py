@@ -8,11 +8,10 @@ class Backtracking:
     def __init__(self, csp):
         self.csp = csp
         self.assignment = {}
-        # self.legal_moves = {}
-        self.num_constraints = {}
-        self.num_constraints_for_each = {}
+        # self.num_constraints = {}
+        # self.num_constraints_for_each = {}
         self.all_solutions = []
-        self.find_all = False
+        self.__find_all = False
         self.__max_number_of_solutions = 1
 
     def backtracking_algorithm_one_solution(self):
@@ -23,7 +22,7 @@ class Backtracking:
         self.backtracking_algorithm()
 
     def backtracking_algorithm_all_solutions(self):
-        self.find_all = True
+        self.__find_all = True
         self.backtracking_algorithm()
 
     def backtracking_algorithm(self):
@@ -37,7 +36,7 @@ class Backtracking:
         assignment_so_far = dict.copy(assignment)
         # returns None if failure
         if csp.is_assign_complete(assignment_so_far):
-            if self.find_all or len(self.all_solutions) < self.__max_number_of_solutions:
+            if self.__find_all or len(self.all_solutions) < self.__max_number_of_solutions:
                 self.all_solutions.append(dict.copy(assignment_so_far))
                 return None
             else:
@@ -111,7 +110,7 @@ class Backtracking:
         affected = []
         # print("\t\tChoosing a value for: ", candidate_name)
         for possible_value in candidate_values:
-            # hipotetically we think that possible value will be assigned to candiadte_name
+            # hypothetically we think that possible value will be assigned to candidate_name
             # print("\t\t\tIF =>  ", candidate_name, " :", possible_value)
             temp_assignment = dict.copy(assignment)
             temp_assignment[candidate_name] = possible_value
@@ -123,12 +122,6 @@ class Backtracking:
             # get the new legal moves assuming new assignment has added candidate_name: possible value
             legal_moves_per_name = self.__get_legal_moves(temp_dom)
             # print("\t\t\tIF => legal_moves_per_name\t", legal_moves_per_name)
-
-            # TODO: filter neighbors of candidate given the constraints
-            # constaint_graph = []
-            # legal_moves_per_name2 = {{var: num} for var, num in legal_moves_per_name if var in constraint_graph}
-            #     if variable in constraint_graph:
-            #       legal_moves_per_name[variable] = number
 
             # for now I assume that everyone is a neighbor of everyone
             sum_up = self.sum_up_neighbors_with_possible_values(legal_moves_per_name)
